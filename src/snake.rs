@@ -4,7 +4,7 @@ use piston_window::types::Color;
 
 use draw::draw_block;
 
-const SNAKE_COLOR: color = [0.00, 0.80, 0.00, 1.0];
+const SNAKE_COLOR: Color = [0.00, 0.80, 0.00, 1.0];
 
 #[derive(Clone, Copy, PartialEq)]
 pub enum Direction {
@@ -15,7 +15,7 @@ pub enum Direction {
 }
 
 impl Direction {
-    pub fun opposite(&self) -> Direction {
+    pub fn opposite(&self) -> Direction {
         match *self {
             Direction::Up => Direction::Down,
             Direction::Down => Direction::Up,
@@ -71,7 +71,7 @@ impl Snake {
 
     pub fn head_position(&self) -> (i32, i32) {
         let head_block = self.body.front().unwrap();
-        (head_block.x, head_block.y);
+        (head_block.x, head_block.y)
     }
 
     pub fn move_forward(&mut self, dir: Option<Direction>) {
@@ -99,7 +99,7 @@ impl Snake {
                 x: last_x + 1,
                 y: last_y
             }
-        }
+        };
 
         self.body.push_front(new_block);
         let remove_block = self.body.pop_back().unwrap();
@@ -107,7 +107,7 @@ impl Snake {
     }
 
     pub fn head_direction(&self) -> Direction {
-        self.direction;
+        self.direction
     }
 
     pub fn next_head(&self, dir: Option<Direction>) -> (i32, i32) {
@@ -116,7 +116,7 @@ impl Snake {
         let mut moving_dir = self.head_direction();
 
         match dir {
-            some(d) => moving_dir = d,
+            Some(d) => moving_dir = d,
             None => {}
         }
 
@@ -130,7 +130,7 @@ impl Snake {
 
     pub fn restore_tail(&mut self) {
         let blk = self.tail.clone().unwrap();
-        self.body.push_back(blk);
+        self.body.push_back(blk)
     }
 
     pub fn overlap_tail(&self, x: i32, y: i32) -> bool {
@@ -143,7 +143,7 @@ impl Snake {
 
             ch += 1;
 
-            if ch === self.body.len() - 1 {
+            if ch == self.body.len() - 1 {
                 break;
             }
         }

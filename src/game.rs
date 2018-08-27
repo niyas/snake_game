@@ -1,6 +1,8 @@
 use rand::{thread_rng, Rng};
+use piston_window::{Context, G2d, Key};
+use piston_window::types::Color;
 
-use sname::{Direction, Snake};
+use snake::{Direction, Snake};
 use draw::{draw_block, draw_rectangle};
 
 const FOOD_COLOR: Color = [0.80, 0.00, 0.00, 1.0];
@@ -58,10 +60,10 @@ impl Game {
         self.update_snake(dir);
     }
 
-    pub fn draw(&self, con: &Context, g: G2d) {
+    pub fn draw(&self, con: &Context, g: &mut G2d) {
         self.snake.draw(con, g);
 
-        if(self.food_exists) {
+        if self.food_exists {
             draw_block(FOOD_COLOR, self.food_x, self.food_y, con, g);
         }
 
@@ -98,20 +100,20 @@ impl Game {
     fn check_eating(&mut self) {
         let (head_x, head_y): (i32, i32) = self.snake.head_position();
 
-        if self.food_exists && self.food_x == head_x && self.food_y = head_y {
+        if self.food_exists && self.food_x == head_x && self.food_y == head_y {
             self.food_exists = false;
             self.snake.restore_tail();
         }
     }
 
-    fn check_if_snake_alive(&self, dir: Options<Direction>) -> bool {
+    fn check_if_snake_alive(&self, dir: Option<Direction>) -> bool {
         let (next_x, next_y): (i32, i32) = self.snake.next_head(dir);
 
         if self.snake.overlap_tail(next_x, next_y) {
             return false;
         }
 
-        next_x > 0 && next_y > 0 && next_x < self.width - 1 && next_y < self.height - 1;
+        next_x > 0 && next_y > 0 && next_x < self.width - 1 && next_y < self.height - 1
     }
 
     fn add_food(&mut self) {
@@ -130,7 +132,7 @@ impl Game {
         self.food_exists = true;
     }
 
-    fn update_snake(&mut self, dir: Options<Direction>) {
+    fn update_snake(&mut self, dir: Option<Direction>) {
         if self.check_if_snake_alive(dir) {
             self.snake.move_forward(dir);
             self.check_eating();
@@ -143,7 +145,7 @@ impl Game {
 
     fn restart(&mut self) {
         self.snake = Snake::new(2, 2);
-        self.waiting_time = 0.0,
+        self.waiting_time = 0.0;
         self.food_exists = true;
         self.food_x = 6;
         self.food_y = 4;
